@@ -1,0 +1,11 @@
+# LaTeX build artefacts
+src/main.aux
+src/main.bcf
+src/main.fdb_latexmk
+src/main.fls
+src/main.log
+src/main.out
+src/main.run.xml
+src/main.synctex.gz
+src/main.toc
+src/main.xdv

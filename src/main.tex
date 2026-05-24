@@ -104,9 +104,16 @@ Rather than implement the modelling pipeline from scratch, we have since opted t
 
 \subsection{Design (10 hours)}
 
-The design for the programme editor involves a 3-panel layout: a sidebar, a preview, and an inspector. On the left is a sidebar listing all of the blocks in the file. Clicking on a block moves the preview panel's focus to one cycle of the selected block. The preview renders the target pressure profile for the duration of the session, the keyboard shortcut \texttt{Mod+0} rescales to fit the whole session in the preview. The inspector panel is where the \texttt{Programme} and selected blocks are configured. In the menu bar, standard file operations are included: \texttt{New}, \textit{Open}, \textit{Save...}, \textit{Save As...}; along with their standard operating system keyboard shortcuts. You can switch the entire user interface to just view the source YAML file under the View Menu.
+The design for the programme editor involves a 3-panel layout: a sidebar, a preview, and an inspector, shown in \autoref{fig:programme-editor}. On the left is a sidebar listing all of the blocks in the file. Clicking on a block moves the preview panel's focus to one cycle of the selected block. The preview renders the target pressure profile for the duration of the session, the keyboard shortcut \texttt{Mod+0} rescales to fit the whole session in the preview. The inspector panel is where the \texttt{Programme} and selected blocks are configured. In the menu bar, standard file operations are included: \texttt{New}, \textit{Open}, \textit{Save...}, \textit{Save As...}; along with their standard operating system keyboard shortcuts. You can switch the entire user interface to just view the source YAML file under the View Menu.
 
-The design for the hardware bench involves a panel-based layout so each team member can easily customise the interface to better suit them. The panels include:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{programme-editor.jpg}
+  \caption{Programme editor: three-panel layout comprising a block sidebar (left), waveform preview (centre), and \texttt{Programme}/block inspector (right).}
+  \label{fig:programme-editor}
+\end{figure}
+
+The design for the hardware bench involves a panel-based layout so each team member can easily customise the interface to better suit them, shown in \autoref{fig:hardware-bench}. The panels include:
 
 \begin{itemize}[noitemsep]
   \item A central signals panel (this is not removable), which lists each device and the signals it emits. For example, for a pressure sensor this is the raw counts of the ADC (a 16-bit binary value), along with this value transformed as a voltage, and a pressure according to the pressure sensor's datasheet.
@@ -117,6 +124,13 @@ The design for the hardware bench involves a panel-based layout so each team mem
 \end{itemize}
 
 For both applications, a bottom status bar that reports any errors and confirms updates to the Pico's internal state.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{hardware-bench.jpg}
+  \caption{Hardware bench: panel-based layout comprising a signals panel (centre), connection and run controls, live plot panels, and per-peripheral configuration panels. This screenshot is a mock-up using fictitious data for illustration purposes only.}
+  \label{fig:hardware-bench}
+\end{figure}
 
 \subsection{Technology stack and tooling (2-3 hours)}
 
