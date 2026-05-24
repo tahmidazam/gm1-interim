@@ -42,13 +42,18 @@
     \normalsize Part IIA: \texttt{GM1} \textit{Multidisciplinary Design}
 }
 
-\author[1]{Tahmid Azam}
+\author[1]{Tahmid Azam\footnote{In the work carried out, Claude has been used to help brainstorm and research ideas. It has also been used to check the content against the assessment criteria.
+Claude Code has been used to write code according to defined software requirements (e.g. generating a UI according to a strict design brief); refactor classes and help identify different strategies for abstractions.
+In this report, all prose writing is original.
+Claude Code has been used to help debug \LaTeX errors, correct formatting syntax, and help adhere to best \LaTeX practices.
+I am happy to share Claude Code transcripts in person if required (exporting them is proving difficult).
+The use of LLMs has been engineered using developer tooling (language servers, linting, formatting, typechecking, documentation) alongside specific prompting techniques and skills (user grilling using questions, Git subtrees of specific python libraries to provide access to module source code) to reduce hallucinations, improve code quality, and achieve greater progress than conventional coding in 10 days.}}
 \affil[ ]{{\normalsize with teammates Luca Buxton, India Henry, Lonnie McKiernan, and Lucy Payne}}
 \affil[ ]{{\normalsize mentored by Dr. Peter Long and Prof. Athina E. Markaki}}
 \affil[ ]{{\small}}
 \affil[1]{Department of Engineering, University of Cambridge}
 
-\date{20 March 2026}
+\date{Sun 24 May 2026}
 
 \begin{document}
 \maketitle
@@ -67,14 +72,6 @@
   \item You can find the documentation website here: \underline{\href{https://pulsepump.github.io/pulsepump/}{pulsepump.github.io}}. A development log can be found here: \underline{\href{https://pulsepump.github.io/pulsepump/devlog/index.html}{pulsepump.github.io/devlog}}.
 \end{itemize}
 
-{\small\paragraph{A note on the use of AI}
-In the work carried out, Claude has been used to help brainstorm and research ideas.
-Claude Code has been used to write code according to defined software requirements (e.g. generating a UI according to a strict design brief); refactor classes and help identify different strategies for abstractions.
-In this report, all prose writing is original.
-Claude Code has been used to help debug \LaTeX errors, correct formatting syntax, and help adhere to best \LaTeX practices.
-I am happy to share Claude Code transcripts in person if required (exporting them is proving difficult).
-The use of LLMs has been engineered using developer tooling (language servers, linting, formatting, typechecking, documentation) alongside specific prompting techniques and skills (user grilling using questions, Git subtrees of specific python libraries to provide access to module source code) to reduce hallucinations, improve code quality, and achieve greater progress than conventional coding in 10 days.}
-
 \newpage
 
 \section{Work completed}
@@ -83,7 +80,7 @@ The use of LLMs has been engineered using developer tooling (language servers, l
 
 We chose a waterfall software development model with the capacity for more interative development during integration with control.
 The software requirements were developed further from the short team report, due to recognising the need to have effective sofware designed for use by the rest of the team to connect and test peripherals (stepper motors, servos, pressure sensors), and view and debug signals.
-Two use cases developed, for which solution-neutral problem statements involve:
+Two use cases emerged, for which solution-neutral problem statements involve:
 
 \begin{enumerate}[noitemsep]
   \item a means to configure a collection of actuators and sensors, observe their behaviour as it happens, and preserve a record of it for later review; and
@@ -117,7 +114,7 @@ We defined a \Programme{} representing a complete description of a target pressu
 Each \Block{} specifies the number of cycles for which it is repeated.
 Sources currently include: a \FunctionGenerator{}, which supports sinusoidal, pulse, square, triangular, constant, and sawtooth waves; and \OpenBF{}, an open-source blood flow simulator \cite{openBF.jl-2018, wreo19175}.
 The \Programme{} also defines the pressure unit and the sample rates.
-This implementation utilises run-length encoding (RLE) to dramatically reduce the file sizes required to be transferred over to the Raspberry Pico: instead of storing an array of all of the samples for the whole duration, we define a block and how many times it repeats, storing only one cycle's samples as a base-64 \texttt{float32} byte string.
+This implementation uses run-length encoding (RLE) to dramatically reduce the file sizes required to be transferred over to the Raspberry Pico: instead of storing an array of all of the samples for the whole duration, we define a block and how many times it repeats, storing only one cycle's samples as a base-64 \texttt{float32} byte string.
 The \Programme{} is serialised to the YAML file format so definitions of each \Block{} can be read by humans without the user interface.
 
 Rather than implement the modelling pipeline from scratch, we have since opted to integrate openBF \cite{openBF.jl-2018, wreo19175}, an open-source 1D Navier-Stokes blood flow solver, allowing the solo development effort to be redirected toward software requirements analysis, user interface design, and the ergonomics of the tool.
@@ -160,6 +157,7 @@ I have also conversed with Lucy and Luca on the mechanical side, attempting to e
 I have also helped with various testing and construction of rigs.
 
 \begin{table}[H]
+  \small
   \centering
   \caption{Weighted selection criteria for GUI technology stack}
   \label{tab:weights}
@@ -180,6 +178,7 @@ I have also helped with various testing and construction of rigs.
 \end{table}
 
 \begin{table}[H]
+  \small
   \centering
   \caption{Candidate GUI technology stacks: strengths and weaknesses}
   \label{tab:candidates}
@@ -199,6 +198,7 @@ I have also helped with various testing and construction of rigs.
 \end{table}
 
 \begin{table}[H]
+  \small
   \centering
   \caption{Pugh matrix weighted scores by stack}
   \label{tab:pugh}
@@ -225,9 +225,9 @@ These run before the project can be run locally, but also before the documentati
 
 \section{Progress against targets}
 
-From our short report:
 
 \begin{table}[H]
+  \small
   \centering
   \caption{Project progress overview}
   \begin{tabularx}{\textwidth}{@{}lXX@{}}
@@ -260,7 +260,7 @@ Remaining tasks include:
 \section{Integration risks and challenges}
 
 I am very pleased with group dynamics and the collaboration across the team.
-I think once we return to testing and all have hands on experience with the different options we have regarding modulation of pressure, concerns around a final chosen mechanism will clear up.
+I think once we return to testing and all have hands on experience with the different options we have regarding modulation of pressure, concerns around a final chosen mechanism will clear up. Integration risks include calibration processes (electronics, control, mechanical), mitigating effects of air in the system (mechanical).
 
 \begingroup
 \renewcommand{\bibfont}{\footnotesize}
