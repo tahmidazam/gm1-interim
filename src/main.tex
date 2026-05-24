@@ -4,34 +4,30 @@
 \usepackage[OT1]{fontenc}
 \usepackage{authblk}
 \usepackage{siunitx}
-\usepackage{babel,csquotes,xpatch}
+\usepackage[british]{babel}
+\usepackage{csquotes}
 \usepackage[backend=biber, style=numeric]{biblatex}
 \usepackage{multicol}
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{booktabs}
 \usepackage[hidelinks]{hyperref}
-\usepackage{array}
-\usepackage[normalem]{ulem}
 \usepackage{tabularx}
 \usepackage[labelfont=bf, textfont=normalfont, justification=raggedright, singlelinecheck=false, font=small]{caption}
 \usepackage{float}
 \usepackage{titlesec}
 \titleformat{\section}
   {\normalfont\bfseries}
-  {\thesection}{1em}{} 
+  {\thesection}{1em}{}
 \titlespacing*{\section}{0pt}{1.2\baselineskip}{0.6\baselineskip}
 \titleformat{\subsection}
-  {\normalfont\itshape} 
-  {\thesubsection}{1em}{} 
+  {\normalfont\itshape}
+  {\thesubsection}{1em}{}
 \titlespacing*{\subsection}{0pt}{1\baselineskip}{0.4\baselineskip}
 \DeclareSIUnit\mmHg{mmHg}
 \DeclareSIUnit\bar{bar}
-\usepackage{tikz}
-\usetikzlibrary{positioning, arrows.meta, matrix, calc}
-\usepackage{circuitikz}
 \usepackage{graphicx}
-\usepackage{wrapfig}
+\usepackage{fancyhdr}
 \addbibresource{references.bib}
 
 \newcommand{\pulsepumpdocbase}{https://pulsepump.github.io/pulsepump/api/core.html}
@@ -39,12 +35,12 @@
 \newcommand{\Block}{\underline{\href{\pulsepumpdocbase\#pulsepump.core.programme.Block}{\texttt{Block}}}}
 \newcommand{\FunctionGenerator}{\underline{\href{\pulsepumpdocbase\#pulsepump.core.programme.FunctionGeneratorSource}{\texttt{FunctionGenerator}}}}
 \newcommand{\OpenBF}{\underline{\href{\pulsepumpdocbase\#pulsepump.core.programme.OpenBFSource}{\texttt{OpenBF}}}}
+
 \title{
-    Interim Individual Report\\[0.5em] 
-    \Large Team 2: Low Cost Perfusion Pump, \textit{PulsePump}\\[0.25em]  
+    Interim Individual Report\\[0.5em]
+    \Large Team 2: Low Cost Perfusion Pump, \textit{PulsePump}\\[0.25em]
     \normalsize Part IIA: \texttt{GM1} \textit{Multidisciplinary Design}
 }
-\usepackage{fancyhdr}
 
 \author[1]{Tahmid Azam}
 \affil[ ]{{\normalsize with teammates Luca Buxton, India Henry, Lonnie McKiernan, and Lucy Payne}}
@@ -72,7 +68,12 @@
 \end{itemize}
 
 {\small\paragraph{A note on the use of AI}
-In the work carried out, Claude has been used to help brainstorm and research ideas. Claude Code has been used to write code according to defined software requirements (e.g. generating a UI according to a strict design brief); refactor classes and help identify different strategies for abstractions. In this report, all prose writing is original. Claude Code has been used to help debug \LaTeX errors, correct formatting syntax, and help adhere to best \LaTeX practices. I am happy to share Claude Code transcripts in person if required (exporting them is proving difficult). The use of LLMs has been engineered using developer tooling (language servers, linting, formatting, typechecking, documentation) alongside specific prompting techniques and skills (user grilling using questions, Git subtrees of specific python libraries to provide access to module source code) to reduce hallucinations, improve code quality, and achieve greater progress than conventional coding in 10 days.}
+In the work carried out, Claude has been used to help brainstorm and research ideas.
+Claude Code has been used to write code according to defined software requirements (e.g. generating a UI according to a strict design brief); refactor classes and help identify different strategies for abstractions.
+In this report, all prose writing is original.
+Claude Code has been used to help debug \LaTeX errors, correct formatting syntax, and help adhere to best \LaTeX practices.
+I am happy to share Claude Code transcripts in person if required (exporting them is proving difficult).
+The use of LLMs has been engineered using developer tooling (language servers, linting, formatting, typechecking, documentation) alongside specific prompting techniques and skills (user grilling using questions, Git subtrees of specific python libraries to provide access to module source code) to reduce hallucinations, improve code quality, and achieve greater progress than conventional coding in 10 days.}
 
 \newpage
 
@@ -80,7 +81,9 @@ In the work carried out, Claude has been used to help brainstorm and research id
 
 \subsection{Requirements and use case analysis (1 hour)}
 
-We chose a waterfall software development model with the capacity for more interative development during integration with control. The software requirements were developed further from the short team report, due to recognising the need to have effective sofware designed for use by the rest of the team to connect and test peripherals (stepper motors, servos, pressure sensors), and view and debug signals. Two use cases developed, for which solution-neutral problem statements involve:
+We chose a waterfall software development model with the capacity for more interative development during integration with control.
+The software requirements were developed further from the short team report, due to recognising the need to have effective sofware designed for use by the rest of the team to connect and test peripherals (stepper motors, servos, pressure sensors), and view and debug signals.
+Two use cases developed, for which solution-neutral problem statements involve:
 
 \begin{enumerate}[noitemsep]
   \item a means to configure a collection of actuators and sensors, observe their behaviour as it happens, and preserve a record of it for later review; and
@@ -110,15 +113,29 @@ We better understood the user stories behind members of the team running tests o
 
 \subsection{Programme Data Model (3 hours)}
 
-We defined a \Programme{} representing a complete description of a target pressure profile for a duration of time, composed of \Block{}s, which can be defined and generated by a source. Each \Block{} specifies the number of cycles for which it is repeated. Sources currently include: a \FunctionGenerator{}, which supports sinusoidal, pulse, square, triangular, constant, and sawtooth waves; and \OpenBF{}, an open-source blood flow simulator \cite{openBF.jl-2018, wreo19175}. The \Programme{} also defines the pressure unit and the sample rates. This implementation utilises run-length encoding (RLE) to dramatically reduce the file sizes required to be transferred over to the Raspberry Pico: instead of storing an array of all of the samples for the whole duration, we define a block and how many times it repeats, storing only one cycle's samples as a base-64 \texttt{float32} byte string. The \Programme{} is serialised to the YAML file format so definitions of each \Block{} can be read by humans without the user interface.
+We defined a \Programme{} representing a complete description of a target pressure profile for a duration of time, composed of \Block{}s, which can be defined and generated by a source.
+Each \Block{} specifies the number of cycles for which it is repeated.
+Sources currently include: a \FunctionGenerator{}, which supports sinusoidal, pulse, square, triangular, constant, and sawtooth waves; and \OpenBF{}, an open-source blood flow simulator \cite{openBF.jl-2018, wreo19175}.
+The \Programme{} also defines the pressure unit and the sample rates.
+This implementation utilises run-length encoding (RLE) to dramatically reduce the file sizes required to be transferred over to the Raspberry Pico: instead of storing an array of all of the samples for the whole duration, we define a block and how many times it repeats, storing only one cycle's samples as a base-64 \texttt{float32} byte string.
+The \Programme{} is serialised to the YAML file format so definitions of each \Block{} can be read by humans without the user interface.
 
-Rather than implement the modelling pipeline from scratch, we have since opted to integrate openBF \cite{openBF.jl-2018, wreo19175}, an open-source 1D Navier-Stokes blood flow solver, allowing the solo development effort to be redirected toward software requirements analysis, user interface design, and the ergonomics of the tool. The motivation for this change of heart was the time constraints surrounding the project. The abstraction of Blocks being driven by a source with a set of configurable parameters also allows individuals to extend the functionality of the project by adding new sources (e.g. other blood flow simulation tools).
+Rather than implement the modelling pipeline from scratch, we have since opted to integrate openBF \cite{openBF.jl-2018, wreo19175}, an open-source 1D Navier-Stokes blood flow solver, allowing the solo development effort to be redirected toward software requirements analysis, user interface design, and the ergonomics of the tool.
+The motivation for this change of heart was the time constraints surrounding the project.
+The abstraction of Blocks being driven by a source with a set of configurable parameters also allows individuals to extend the functionality of the project by adding new sources (e.g. other blood flow simulation tools).
 
 \subsection{Design (10 hours)}
 
-The design for the programme editor involves a 3-panel layout: a sidebar, a preview, and an inspector, shown in \autoref{fig:programme-editor}. On the left is a sidebar listing all of the blocks in the file. Clicking on a block moves the preview panel's focus to one cycle of the selected block. The preview renders the target pressure profile for the duration of the session, the keyboard shortcut \texttt{Mod+0} rescales to fit the whole session in the preview. The inspector panel is where the \Programme{} and selected blocks are configured. In the menu bar, standard file operations are included: \texttt{New}, \textit{Open}, \textit{Save...}, \textit{Save As...}; along with their standard operating system keyboard shortcuts. You can switch the entire user interface to just view the source YAML file under the View Menu.
+The design for the programme editor involves a 3-panel layout: a sidebar, a preview, and an inspector, shown in \autoref{fig:programme-editor}.
+On the left is a sidebar listing all of the blocks in the file.
+Clicking on a block moves the preview panel's focus to one cycle of the selected block.
+The preview renders the target pressure profile for the duration of the session, the keyboard shortcut \texttt{Mod+0} rescales to fit the whole session in the preview.
+The inspector panel is where the \Programme{} and selected blocks are configured.
+In the menu bar, standard file operations are included: \texttt{New}, \textit{Open}, \textit{Save...}, \textit{Save As...}; along with their standard operating system keyboard shortcuts.
+You can switch the entire user interface to just view the source YAML file under the View Menu.
 
-The design for the hardware bench involves a panel-based layout so each team member can easily customise the interface to better suit them, shown in \autoref{fig:hardware-bench}. The panels include:
+The design for the hardware bench involves a panel-based layout so each team member can easily customise the interface to better suit them, shown in \autoref{fig:hardware-bench}.
+The panels include:
 
 \begin{itemize}[noitemsep]
   \item A central signals panel (this is not removable), which lists each device and the signals it emits. For example, for a pressure sensor this is the raw counts of the ADC (a 16-bit binary value), along with this value transformed as a voltage, and a pressure according to the pressure sensor's datasheet.
@@ -130,15 +147,17 @@ The design for the hardware bench involves a panel-based layout so each team mem
 
 For both applications, a bottom status bar that reports any errors and confirms updates to the Pico's internal state.
 
-
-
 \subsection{Technology stack and tooling (2-3 hours)}
 
-We chose a technology stack by evaluating against project requirements: first enumerating and weighting selection criteria (\autoref{tab:weights}), researching candidates (\autoref{tab:candidates}), and constructing a Pugh matrix (\autoref{tab:pugh}). From the Pugh matrix, we chose Qt/PySide6/PyQtGraph. It has a mature, panel-based layout engine, allowing for customisable and flexible docking of panels in various positions, and the opening of panels as separate windows as an extra benefit.
+We chose a technology stack by evaluating against project requirements: first enumerating and weighting selection criteria (\autoref{tab:weights}), researching candidates (\autoref{tab:candidates}), and constructing a Pugh matrix (\autoref{tab:pugh}).
+From the Pugh matrix, we chose Qt/PySide6/PyQtGraph.
+It has a mature, panel-based layout engine, allowing for customisable and flexible docking of panels in various positions, and the opening of panels as separate windows as an extra benefit.
 
 \subsection{Additional work (10-15 hours, collaborative)}
 
-Alongside the work scoped to the software domain of the project, I have had the pleasure of collaborating with Lonnie and India on the electrical side, learning about microcontrollers, breadboards, jumper cables, use of function generators, power supplies, oscilliscopes, multimeters, stepper motors, servos, pressure sensors. I have also conversed with Lucy and Luca on the mechanical side, attempting to explore their use of CAD and their design processes too. I have also helped with various testing and construction of rigs.
+Alongside the work scoped to the software domain of the project, I have had the pleasure of collaborating with Lonnie and India on the electrical side, learning about microcontrollers, breadboards, jumper cables, use of function generators, power supplies, oscilliscopes, multimeters, stepper motors, servos, pressure sensors.
+I have also conversed with Lucy and Luca on the mechanical side, attempting to explore their use of CAD and their design processes too.
+I have also helped with various testing and construction of rigs.
 
 \begin{table}[H]
   \centering
@@ -198,7 +217,11 @@ Alongside the work scoped to the software domain of the project, I have had the 
   \end{tabularx}
 \end{table}
 
-Development tooling is critical for LLM-based agentic coding platforms to have feedback on linting (styling) errors, compilation errors (N.B., in intepreted Python this more concerns itself with type errors), and allows LLMs to rely on external tools for code formatting. Running linting, formatting, and typechecking in continuous integration/continuous deployment pipelines prohibits the pushing of unsafe code that does not conform to best Python practices. In addition, as development is collaborative and takes place on multiple machines across separate platforms, a unified Python toolchain is desired that handles syncing of Python virtual environments, dependencies, and prescribes opinionated ways for running the project. We chose uv as the project orchestrator (handling project dependencies, defining and syncing Python environments), ty as the typechecker, and ruff as the linter and formatter. These run before the project can be run locally, but also before the documentation server can be built on pushing to the main branch.
+Development tooling is critical for LLM-based agentic coding platforms to have feedback on linting (styling) errors, compilation errors (N.B., in intepreted Python this more concerns itself with type errors), and allows LLMs to rely on external tools for code formatting.
+Running linting, formatting, and typechecking in continuous integration/continuous deployment pipelines prohibits the pushing of unsafe code that does not conform to best Python practices.
+In addition, as development is collaborative and takes place on multiple machines across separate platforms, a unified Python toolchain is desired that handles syncing of Python virtual environments, dependencies, and prescribes opinionated ways for running the project.
+We chose uv as the project orchestrator (handling project dependencies, defining and syncing Python environments), ty as the typechecker, and ruff as the linter and formatter.
+These run before the project can be run locally, but also before the documentation server can be built on pushing to the main branch.
 
 \section{Progress against targets}
 
@@ -218,7 +241,9 @@ From our short report:
   \end{tabularx}
 \end{table}
 
-One notable deviation from the short report is that the selection of waveforms according to age, sex and other demographic parameters, as well as exercise state has been omitted in order to keep the project feasible alongside the time constraints. The openBF simulator \cite{openBF.jl-2018} supports changing the heart rate as a crude measure of exercise state. I have noted further exploration of different sources for blocks in the remaining work, but this remains a lower priority.
+One notable deviation from the short report is that the selection of waveforms according to age, sex and other demographic parameters, as well as exercise state has been omitted in order to keep the project feasible alongside the time constraints.
+The openBF simulator \cite{openBF.jl-2018} supports changing the heart rate as a crude measure of exercise state.
+I have noted further exploration of different sources for blocks in the remaining work, but this remains a lower priority.
 
 \section{Remaining work and timeline}
 
@@ -234,7 +259,8 @@ Remaining tasks include:
 
 \section{Integration risks and challenges}
 
-I am very pleased with group dynamics and the collaboration across the team. I think once we return to testing and all have hands on experience with the different options we have regarding modulation of pressure, concerns around a final chosen mechanism will clear up.
+I am very pleased with group dynamics and the collaboration across the team.
+I think once we return to testing and all have hands on experience with the different options we have regarding modulation of pressure, concerns around a final chosen mechanism will clear up.
 
 \begingroup
 \renewcommand{\bibfont}{\footnotesize}
@@ -257,7 +283,5 @@ I am very pleased with group dynamics and the collaboration across the team. I t
   \caption{Hardware bench: panel-based layout comprising a signals panel (centre), connection and run controls, live plot panels, and per-peripheral configuration panels. This screenshot is a mock-up using fictitious data for illustration purposes only.}
   \label{fig:hardware-bench}
 \end{figure}
-
-
 
 \end{document}
